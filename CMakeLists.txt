@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.5.1)
+project(timer)
+add_definitions(-std=c++11)
+include_directories(include)
+file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
+find_package(Boost REQUIRED COMPONENTS date_time program_options)
+add_executable(timer ${SOURCE_FILES})
+target_link_libraries(timer ${Boost_LIBRARIES})
