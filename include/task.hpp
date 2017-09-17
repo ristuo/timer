@@ -14,6 +14,7 @@ class task
     task(std::string);
     const std::string get_name() const { return name; };
     void add_work(ptime start, ptime end); 
+    void add_work(work_interval);
     const worklist get_intervals() const;
     time_duration total_time() const;
 };

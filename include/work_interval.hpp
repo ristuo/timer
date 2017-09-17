@@ -6,6 +6,7 @@ class work_interval
 {
   public:
     work_interval(ptime start, ptime end);
+    work_interval(std::string start, std::string end);
     ptime start;
     ptime end;
 };

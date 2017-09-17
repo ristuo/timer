@@ -15,6 +15,11 @@ void task::add_work(ptime start, ptime end)
   this->intervals.push_back(work_interval(start, end));
 }
 
+void task::add_work(work_interval x)
+{
+  this->intervals.push_back(x);
+}
+
 const worklist task::get_intervals() const { return intervals; };
 
 time_duration task::total_time() const

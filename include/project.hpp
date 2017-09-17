@@ -11,6 +11,7 @@ class project
       description(description) {}; 
     void add_task(task);
     void set_description(std::string);
+    void set_tasks(tasklist tasks) { this->tasks = tasks; } ;
     const std::string get_name() const { return name; };
     const tasklist get_tasks() const { return tasks; };
     const std::string get_description() const { return description; };

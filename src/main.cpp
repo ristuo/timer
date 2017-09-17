@@ -42,4 +42,8 @@ int main(int ac, char** av)
   }
   tasktimer t = load("../test-data");
   cout << t << endl; 
+  for (const auto& x: t.get_projects())
+  {
+    std::cout << x << std::endl; 
+  }
 }
