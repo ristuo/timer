@@ -4,6 +4,7 @@
 #include <string>
 #include "task.hpp"
 #include "project.hpp"
+#include "persist.hpp"
 namespace po = boost::program_options;
 
 project add_project()
@@ -11,20 +12,21 @@ project add_project()
   std::cout << "Enter project name: ";
   std::string name;
   std::cin >> name;
+  std::cin.ignore();
   std::string description;
   std::cout << "Enter project description: ";
-  std::cin >> description;
+  std::getline(std::cin, description);
   return project(name, description);
 }
 
 int main(int ac, char** av) 
 {
+  using namespace std;
   po::options_description desc("Supported options");
   desc.add_options()("add-project", "Add a new project or task");
   po::variables_map vm;
   po::store(po::parse_command_line(ac, av, desc), vm);
   po::notify(vm);
-
 
   if (vm.count("add-project"))
   {
@@ -38,6 +40,6 @@ int main(int ac, char** av)
     new_project.add_task(a);
     std::cout << new_project << std::endl;
   }
-
-
+  tasktimer t = load("../test-data");
+  cout << t << endl; 
 }
