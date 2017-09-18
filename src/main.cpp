@@ -46,4 +46,5 @@ int main(int ac, char** av)
   {
     std::cout << x << std::endl; 
   }
+  save(t, "../test-data");
 }

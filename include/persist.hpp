@@ -3,7 +3,6 @@
 #include "tasktimer.hpp"
 #include "project.hpp"
 
-tasktimer load(const char*);
-
-void save(tasktimer t);
+tasktimer load(const char* folderpath);
+void save(tasktimer t, const char* folderpath);
 #endif

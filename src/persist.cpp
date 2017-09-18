@@ -1,9 +1,11 @@
 #include "persist.hpp"
+#include <fstream>
 #include "project.hpp"
 #include "fast-cpp-csv-parser-master/csv.h"
 #include <string>
 #include "tasktimer.hpp"
 #include "work_interval.hpp"
+#include "boost/date_time/posix_time/posix_time.hpp"
 using namespace std;
 std::vector<project> load_projects(const char* folderpath)
 {
@@ -77,4 +79,46 @@ tasktimer load(const char* folderpath)
     res.add_project(project);
   };
   return res;
+}
+
+void save_projects(tasktimer t, const char* folderpath) 
+{
+  string filepath = string(folderpath) + "/projects.csv";
+  ofstream outfile;
+  outfile.open(filepath);
+  outfile << "name,description" << endl;
+  for (auto const& p: t.get_projects()) 
+  {
+    outfile << p.get_name() << "," << p.get_description() << endl; 
+  }
+  outfile.close();
+}
+
+void save_intervals(tasktimer t, const char* folderpath) 
+{
+  using namespace boost::posix_time;
+  string filepath = string(folderpath) + "/intervals.csv";
+  ofstream outfile;
+  outfile.open(filepath);
+  outfile << "project,task,start,end" << endl;
+  for (auto const& p: t.get_projects()) 
+  {
+    for (auto const& t: p.get_tasks())
+    {
+      for (auto const& i: t.get_intervals()) 
+      {
+        outfile << p.get_name() << ",";
+        outfile << t.get_name() << ",";
+        outfile << to_iso_string(i.start) << ",";
+        outfile << to_iso_string(i.end) << endl; 
+      }
+    }
+  }
+  outfile.close(); 
+}
+
+void save(tasktimer t, const char* folderpath)
+{
+  save_projects(t, folderpath); 
+  save_intervals(t, folderpath);
 }
