@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(timer)
-add_definitions(-std=c++11)
+add_definitions(-std=c++1z)
 include_directories(include)
 include_directories(lib)
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)

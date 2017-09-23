@@ -2,6 +2,7 @@
 #define PROJECT_H
 #include "task.hpp"
 #include <string>
+#include <experimental/optional>
 typedef std::vector<task> tasklist;
 class project
 {
@@ -15,6 +16,7 @@ class project
     const std::string get_name() const { return name; };
     const tasklist get_tasks() const { return tasks; };
     const std::string get_description() const { return description; };
+    std::experimental::optional<task> get_task(std::string task_name);
   private:
     std::string name;
     std::string description;

@@ -1,6 +1,30 @@
 #include "tasktimer.hpp"
 #include <iostream>
 
+bool tasktimer::has_project(std::string project_name)
+{
+  for (auto const& p: this->projects) 
+  {
+    if (p.get_name() == project_name)
+    {
+      return true; 
+    }
+  }
+  return false;
+}
+
+std::experimental::optional<project> tasktimer::get_project(std::string project_name)
+{
+  for (auto p: this->projects)
+  {
+    if (p.get_name() == project_name)
+    {
+      return p;
+    }
+  }
+  return {};
+}
+
 std::ostream& operator<<(std::ostream& os, const tasktimer& t)
 {
   int max_name_width = 0;

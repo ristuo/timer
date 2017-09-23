@@ -40,7 +40,7 @@ void help(tasktimer t, po::variables_map vm)
     add-project                   Add a project" << std::endl;
 }
 
-void start(tasktimer t, po::variables_map vm)
+void start(tasktimer ttimer, po::variables_map vm)
 {
   string input = vm["command"].as<vector<string>>()[1];
   vector<string> project_task;
@@ -50,11 +50,22 @@ void start(tasktimer t, po::variables_map vm)
     cout << "Incorrect project:task specification " << input << std::endl;
     exit(78);
   }
-  // do both project and task exist
-  // if they do, start timer
-  // wait for user input, on receiving stop timing
-  string project = project_task[0];
-  string task = project_task[1];
+  string project_name = project_task[0];
+  string task_name = project_task[1];
+  auto project_option = ttimer.get_project(project_name); 
+  if (!project_option)
+  {
+    cout << "No project " << project_name << endl;
+    exit(78);
+  }
+  project p = project_option.value();
+  auto task_option = p.get_task(task_name);
+  if (!task_option)
+  {
+    cout << "No task " << task_name << " in project " << project_name << endl;
+    exit(78);
+  }
+  task t = task_option.value();
   std::cout << "Implement starting!" << std::endl;
 }
 
