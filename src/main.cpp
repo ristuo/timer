@@ -5,9 +5,11 @@
 #include "task.hpp"
 #include "project.hpp"
 #include "persist.hpp"
+#include "timer.hpp"
+#include <stdlib.h>
 namespace po = boost::program_options;
 
-project add_project()
+void add_project(tasktimer t)
 {
   std::cout << "Enter project name: ";
   std::string name;
@@ -16,35 +18,49 @@ project add_project()
   std::string description;
   std::cout << "Enter project description: ";
   std::getline(std::cin, description);
-  return project(name, description);
+  t.add_project(project(name, description));
 }
+
+void show(tasktimer t)
+{
+  for (const auto& x: t.get_projects())
+  {
+    std::cout << x << std::endl; 
+  } 
+}
+
+typedef std::map<std::string, std::function<void(tasktimer t)>> command_map;
+static const command_map cmds = {
+  { 
+    "show", show
+  },
+  {
+    "add-project", add_project
+  }
+};
 
 int main(int ac, char** av) 
 {
   using namespace std;
   po::options_description desc("Supported options");
-  desc.add_options()("add-project", "Add a new project or task");
+  desc.add_options()("command", "Run command");
+  po::positional_options_description p;
+  p.add("command", -1);
   po::variables_map vm;
-  po::store(po::parse_command_line(ac, av, desc), vm);
+  po::store(
+    po::command_line_parser(ac, av)
+      .options(desc)
+      .positional(p)
+      .run(), 
+    vm);
   po::notify(vm);
-
-  if (vm.count("add-project"))
+  string cmd = vm["command"].as<string>();
+  if (cmds.find(cmd) == cmds.end())
   {
-    auto new_project = add_project();
-    auto x = boost::posix_time::time_from_string("2017-09-15 15:45:20");
-    auto y = boost::posix_time::time_from_string("2017-09-15 15:55:13");
-    auto a = task(std::string("C++"));
-    a.add_work(x, y);
-    a.add_work(x, y);
-    a.add_work(x, y);
-    new_project.add_task(a);
-    std::cout << new_project << std::endl;
+    std::cout << "Unrecognized command " << cmd << endl;
+    exit(78);
   }
   tasktimer t = load("../test-data");
-  cout << t << endl; 
-  for (const auto& x: t.get_projects())
-  {
-    std::cout << x << std::endl; 
-  }
-  save(t, "../test-data");
+  cmds.find(cmd)->second(t);
+  //save(t, "../test-data");
 }
